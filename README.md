@@ -35,17 +35,17 @@ We compute one control policy that is generalized to the basic structure of our 
 ```math
 \begin{split}
     \mathcal{X} &= \left\{\mathbf{x} = \begin{pmatrix}
-        \bar{x}\\
-        \bar{y}\\
-        o\\
-        k\\
-        d
+\bar{x}\\
+\bar{y}\\
+o\\
+k\\
+d
     \end{pmatrix}= \begin{pmatrix}
-        \text{x-position}\\
-        \text{y-position}\\
-        \text{orientation}\\
-        \text{picked up key}\\
-        \text{door unlocked}
+\text{x-position}\\
+\text{y-position}\\
+\text{orientation}\\
+\text{picked up key}\\
+\text{door unlocked}
     \end{pmatrix}\in \mathbb{R}^5
     \right\}\\
     s.t.\, &0 \leq \bar{x} < W = \text{map width} \\
@@ -58,32 +58,32 @@ We compute one control policy that is generalized to the basic structure of our 
 
 ### Control Space
 ```math
-$$\begin{split}
+\begin{split}
     \mathcal{U} &= \left\{\text{MF}, \text{TL}, \text{TR}, \text{PK}, \text{UD}\right\} \\
     \text{s.t. MF}&: \text{Move Forward} \\
     \text{TL}&: \text{Turn Left} \\
     \text{TR}&: \text{Turn Right} \\
     \text{PK}&: \text{Pick up Key} \\
     \text{UD}&: \text{Unlock Door} 
-\end{split}$$
+\end{split}
 ```
 
 ## Motion Model
 ```math
-$$\begin{split}
+\begin{split}
     \mathbf{x}_{t+1} &= f(\mathbf{x}_t, u_t) \\
     &= \begin{cases}
-        \bar{x}_{t+1} = \bar{x}_t + 1 : o_t = \text{RIGHT}, u_t = \text{MF}\\
-        \bar{x}_{t+1} = \bar{x}_t - 1 : o_t = \text{LEFT}, u_t = \text{MF}\\
-        \bar{y}_{t+1} = \bar{y}_t + 1 : o_t = \text{DOWN}, u_t = \text{MF}\\
-        \bar{y}_{t+1} = \bar{y}_t - 1 : o_t = \text{UP}, u_t = \text{MF}\\
-        o_{t+1} = (o_t + 1) \mod 4 : u_t = \text{TR}\\
-        o_{t+1} = (o_t - 1) \mod 4 : u_t = \text{TL}\\
-        k_{t+1} = 1 : u_t = \text{PK}\\
-        d_{t+1} =  1 : u_t = \text{UD}\\
-        \mathbf{x}_t : \text{otherwise}
+\bar{x}_{t+1} = \bar{x}_t + 1 : o_t = \text{RIGHT}, u_t = \text{MF}\\
+\bar{x}_{t+1} = \bar{x}_t - 1 : o_t = \text{LEFT}, u_t = \text{MF}\\
+\bar{y}_{t+1} = \bar{y}_t + 1 : o_t = \text{DOWN}, u_t = \text{MF}\\
+\bar{y}_{t+1} = \bar{y}_t - 1 : o_t = \text{UP}, u_t = \text{MF}\\
+o_{t+1} = (o_t + 1) \mod 4 : u_t = \text{TR}\\
+o_{t+1} = (o_t - 1) \mod 4 : u_t = \text{TL}\\
+k_{t+1} = 1 : u_t = \text{PK}\\
+d_{t+1} =  1 : u_t = \text{UD}\\
+\mathbf{x}_t : \text{otherwise}
     \end{cases}
-\end{split}$$
+\end{split}
 ```
 
 ## Planning Horizon
@@ -94,34 +94,34 @@ $$T = (W \times H \times 4 \times 2 \times 2) - 1$$
 For the purposes of making the upcoming definitions easier, we define the state of the agent taking a step in front of it as
 ```math
 \hat{\mathbf{x}} = f(\mathbf{x},\text{MF}) = \begin{pmatrix}
-        \hat{\bar{x}}\\
-        \hat{\bar{y}}\\
-        \hat{o}\\
-        \hat{k}\\
-        \hat{d}
+\hat{\bar{x}}\\
+\hat{\bar{y}}\\
+\hat{o}\\
+\hat{k}\\
+\hat{d}
     \end{pmatrix}
 ```
 
 ### Stage Cost
 ```math
 l(\mathbf{x}, u) = \begin{cases}
-        0 : (\bar{x}, \bar{y}) = p_\text{goal}, u \neq \text{MF}\\
-        \infty : (\bar{x}, \bar{y}) \in \text{Walls}\\
-        \infty : (\bar{x}, \bar{y}) = p_\text{door}, d = 0\\
-        \infty : (\bar{x}, \bar{y}) = p_\text{key}, k = 0\\
-        \infty : \hat{\bar{x}} \notin [0,W), \hat{\bar{y}} \notin [0,H)\\
-        \infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{key}, u = \text{PK}\\
-        \infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{door}, u = \text{UD}\\
-        \infty : k=0, u = \text{UD}\\
-        1 : \text{otherwise}
+0 : (\bar{x}, \bar{y}) = p_\text{goal}, u \neq \text{MF}\\
+\infty : (\bar{x}, \bar{y}) \in \text{Walls}\\
+\infty : (\bar{x}, \bar{y}) = p_\text{door}, d = 0\\
+\infty : (\bar{x}, \bar{y}) = p_\text{key}, k = 0\\
+\infty : \hat{\bar{x}} \notin [0,W), \hat{\bar{y}} \notin [0,H)\\
+\infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{key}, u = \text{PK}\\
+\infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{door}, u = \text{UD}\\
+\infty : k=0, u = \text{UD}\\
+1 : \text{otherwise}
     \end{cases}
 ```
 
 ### Terminal Cost
 ```math
 q(\mathbf{x}) = \begin{cases}
-        0 : \bar{x} = \bar{x}_\text{goal}, \bar{y} = \bar{y}_\text{goal}\\
-        \infty : \text{otherwise}
+0 : \bar{x} = \bar{x}_\text{goal}, \bar{y} = \bar{y}_\text{goal}\\
+\infty : \text{otherwise}
     \end{cases}
 ```
 
@@ -131,23 +131,23 @@ In the Random Map problem, we need to expand our state space to include the 2 do
 ```math
 \begin{split}
     \mathcal{X} &= \left\{\mathbf{x} = \begin{pmatrix}
-        \bar{x}\\
-        \bar{y}\\
-        o\\
-        k\\
-        d_1\\
-        d_2\\
-        p_{\text{key}}\\
-        p_{\text{goal}}
+\bar{x}\\
+\bar{y}\\
+o\\
+k\\
+d_1\\
+d_2\\
+p_{\text{key}}\\
+p_{\text{goal}}
     \end{pmatrix}= \begin{pmatrix}
-        \text{x-position}\\
-        \text{y-position}\\
-        \text{orientation}\\
-        \text{picked up key}\\
-        \text{door 1 unlocked}\\
-        \text{door 2 unlocked}\\
-        \text{position index of key}\\
-        \text{position index of goal}
+\text{x-position}\\
+\text{y-position}\\
+\text{orientation}\\
+\text{picked up key}\\
+\text{door 1 unlocked}\\
+\text{door 2 unlocked}\\
+\text{position index of key}\\
+\text{position index of goal}
     \end{pmatrix}\in \mathbb{R}^8
     \right\}\\
     s.t.\, &0 \leq \bar{x} < W = \text{map width} \\
@@ -180,16 +180,16 @@ In the Random Map problem, we need to expand our state space to include the 2 do
 \begin{split}
     \mathbf{x}_{t+1} &= f(\mathbf{x}_t, u_t) \\
     &= \begin{cases}
-        \bar{x}_{t+1} = \bar{x}_t + 1 : o_t = \text{RIGHT}, u_t = \text{MF}\\
-        \bar{x}_{t+1} = \bar{x}_t - 1 : o_t = \text{LEFT}, u_t = \text{MF}\\
-        \bar{y}_{t+1} = \bar{y}_t + 1 : o_t = \text{DOWN}, u_t = \text{MF}\\
-        \bar{y}_{t+1} = \bar{y}_t - 1 : o_t = \text{UP}, u_t = \text{MF}\\
-        o_{t+1} = (o_t + 1) \mod 4 : u_t = \text{TR}\\
-        o_{t+1} = (o_t - 1) \mod 4 : u_t = \text{TL}\\
-        k_{t+1} = 1 : u_t = \text{PK}\\
-        d_{1,t+1} =  1 : (\hat{\bar{x}},\hat{\bar{y}}) = p_\text{door1}, u_t = \text{UD}\\
-        d_{2,t+1} =  1 : (\hat{\bar{x}},\hat{\bar{y}}) = p_\text{door2}, u_t = \text{UD}\\
-        \mathbf{x}_t : \text{otherwise}
+\bar{x}_{t+1} = \bar{x}_t + 1 : o_t = \text{RIGHT}, u_t = \text{MF}\\
+\bar{x}_{t+1} = \bar{x}_t - 1 : o_t = \text{LEFT}, u_t = \text{MF}\\
+\bar{y}_{t+1} = \bar{y}_t + 1 : o_t = \text{DOWN}, u_t = \text{MF}\\
+\bar{y}_{t+1} = \bar{y}_t - 1 : o_t = \text{UP}, u_t = \text{MF}\\
+o_{t+1} = (o_t + 1) \mod 4 : u_t = \text{TR}\\
+o_{t+1} = (o_t - 1) \mod 4 : u_t = \text{TL}\\
+k_{t+1} = 1 : u_t = \text{PK}\\
+d_{1,t+1} =  1 : (\hat{\bar{x}},\hat{\bar{y}}) = p_\text{door1}, u_t = \text{UD}\\
+d_{2,t+1} =  1 : (\hat{\bar{x}},\hat{\bar{y}}) = p_\text{door2}, u_t = \text{UD}\\
+\mathbf{x}_t : \text{otherwise}
     \end{cases}
     \end{split}
 ```
@@ -201,24 +201,24 @@ $$T = (W \times H \times 4 \times 2 \times 2 \times 2 \times 3 \times 3) - 1$$
 #### Stage Cost
 ```math
 l(\mathbf{x}, u) = \begin{cases}
-        0 : (\bar{x}, \bar{y}) = p_\text{goal}, u \neq \text{MF}\\
-        \infty : (\bar{x}, \bar{y}) \in \text{Walls}\\
-        \infty : (\bar{x}, \bar{y}) = p_\text{door1}, d_1 = 0\\
-        \infty : (\bar{x}, \bar{y}) = p_\text{door2}, d_2 = 0\\
-        \infty : (\bar{x}, \bar{y}) = p_\text{key}, k = 0\\
-        \infty : \hat{\bar{x}} \notin [0,W), \hat{\bar{y}} \notin [0,H)\\
-        \infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{key}, u = \text{PK}\\
-        \infty : (\hat{\bar{x}}, \hat{\bar{y}}) \in \{p_\text{door1},p_\text{door2}\}, u = \text{UD}\\
-        \infty : k=0, u = \text{UD}\\
-        1 : \text{otherwise}
+0 : (\bar{x}, \bar{y}) = p_\text{goal}, u \neq \text{MF}\\
+\infty : (\bar{x}, \bar{y}) \in \text{Walls}\\
+\infty : (\bar{x}, \bar{y}) = p_\text{door1}, d_1 = 0\\
+\infty : (\bar{x}, \bar{y}) = p_\text{door2}, d_2 = 0\\
+\infty : (\bar{x}, \bar{y}) = p_\text{key}, k = 0\\
+\infty : \hat{\bar{x}} \notin [0,W), \hat{\bar{y}} \notin [0,H)\\
+\infty : (\hat{\bar{x}}, \hat{\bar{y}}) = p_\text{key}, u = \text{PK}\\
+\infty : (\hat{\bar{x}}, \hat{\bar{y}}) \in \{p_\text{door1},p_\text{door2}\}, u = \text{UD}\\
+\infty : k=0, u = \text{UD}\\
+1 : \text{otherwise}
     \end{cases}
 ```
 
 #### Terminal Cost
 ```math
 q(\mathbf{x}) = \begin{cases}
-        0 : \bar{x} = \bar{x}_\text{goal}, \bar{y} = \bar{y}_\text{goal}\\
-        \infty : \text{otherwise}
+0 : \bar{x} = \bar{x}_\text{goal}, \bar{y} = \bar{y}_\text{goal}\\
+\infty : \text{otherwise}
     \end{cases}
 ```
 
